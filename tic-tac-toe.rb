@@ -48,7 +48,8 @@ class Game
   def initialize(player_1, player_2)
     @player_1 = player_1
     @player_2 = player_2
-    @board = Array.new(3, Array.new(3))
+    @board = Array.new(3, Array.new(3, ' '))
+    @winner = nil
   end
 
   def show_board
@@ -91,17 +92,27 @@ class Game
     moves = []
     board.each_with_index do |row, row_index|
       row.each_with_index do |spot, spot_index|
-         if spot == nil
+         if spot == ' '
           moves << [row_index, spot_index]
          end
       end
     end
     return moves
   end
+
+  def print_out
+    p self.board[0]
+    p self.board[1]
+    p self.board[2]
+  end
+
+  def play_round
+    
+  end
+
 end
 
 x = Game.new("you", "me")
 
-p x.update(x.board, x.get_move, "x")
-p x.update(x.board, x.get_move, "x")
-p x.update(x.board, x.get_move, "x")
+x.update(x.board, x.get_move, "x")
+x.print_out
