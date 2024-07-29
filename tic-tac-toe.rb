@@ -108,7 +108,7 @@ class Game
     p self.board[2]
   end
 
-  def play_round
+  def play_game
     while check_winner(self.board, @current_player) != true
       if self.current_player == @player_1
         self.current_player = @player_2
@@ -119,11 +119,27 @@ class Game
       update(self.board, get_move(), self.current_player)
     end
     print_out
-    puts "${self.current_player} is the winner!"
+    puts "#{self.current_player} is the winner!"
   end
 
 end
 
-x = Game.new("you", "me")
+def get_users
+  puts "Player 1: "
+  player_1 = gets.chomp
+  puts "Player 2: "
+  player_2 = gets.chomp
+  return [player_1, player_2]
+end
 
-x.play_round
+
+  players = get_users()
+  player_1 = players[0]
+  player_2 = players[1]
+
+  new_game = Game.new(player_1, player_2)
+  new_game.play_game
+
+
+
+
