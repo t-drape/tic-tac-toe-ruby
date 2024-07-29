@@ -45,11 +45,13 @@
 
 class Game
   attr_accessor :board
+  attr_accessor :current_player
   def initialize(player_1, player_2)
     @player_1 = player_1
     @player_2 = player_2
     @board = Array.new(3, Array.new(3, ' '))
     @winner = nil
+    @current_player = player_2
   end
 
   def show_board
@@ -58,11 +60,11 @@ class Game
 
   def check_winner(board, current_player)
     wins = []
-    diags = [[board[0][0], board[1][1], board[2][2]], [board[0][2], board[1][1], board[2][0]]]
+    diags_and_verts = [[board[0][0], board[1][1], board[2][2]], [board[0][2], board[1][1], board[2][0]], [board[0][0], board[1][0], board[2][0]], [board[0][1], board[1][1], board[2][1]], [board[0][2], board[1][2], board[2][2]]]
     board.each do |row|
       wins << row.all? {|element| element == current_player} ? true : false
     end
-    diags.each do |row|
+    diags_and_verts.each do |row|
       wins << row.all? {|element| element == current_player} ? true : false
     end
     wins.any?(true)
@@ -107,12 +109,21 @@ class Game
   end
 
   def play_round
-    
+    while check_winner(self.board, @current_player) != true
+      if self.current_player == @player_1
+        self.current_player = @player_2
+      else
+        self.current_player = @player_1
+      end
+      print_out()
+      update(self.board, get_move(), self.current_player)
+    end
+    print_out
+    puts "${self.current_player} is the winner!"
   end
 
 end
 
 x = Game.new("you", "me")
 
-x.update(x.board, x.get_move, "x")
-x.print_out
+x.play_round
