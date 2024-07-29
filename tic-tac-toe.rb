@@ -49,7 +49,6 @@ class Game
     @player_1 = player_1
     @player_2 = player_2
     @board = Array.new(3, Array.new(3))
-    @winner_exists = false
   end
 
   def show_board
@@ -69,7 +68,8 @@ class Game
   end
 
   def update(board, move, current_player)
-
+    board[move[0]] = board[move[0]].each_with_index.map {|val, index| index != move[1] ? val : current_player}
+    return board
   end
 
   def greet()
@@ -97,13 +97,9 @@ class Game
     end
     return moves
   end
-
-
-
-  private
-  attr_accessor :winner_exists
 end
 
 x = Game.new("you", "me")
 
-p x.update(x.board, [0,0], "x")
+x.update(x.board, [0,0], "x")
+p x.update(x.board, [1,1], "x")
