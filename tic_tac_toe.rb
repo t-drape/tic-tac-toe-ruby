@@ -69,6 +69,26 @@ class Game
     puts 'Please select an available move: '
   end
 
+  def available_moves(board)
+    moves = []
+    board.each_with_index do |row, row_index|
+      row.each_with_index do |spot, spot_index|
+        moves << [row_index, spot_index] if spot == ' '
+      end
+    end
+    moves
+  end
+
+  def move
+    move = nil
+    available_moves = available_moves(board)
+    until available_moves.include?(move) == true
+      greet
+      move = gets.chomp.split(',').map(&:to_i)
+    end
+    move
+  end
+
   def check_winner(board, current_player)
     wins = []
     diagonals = [[board[0][0], board[1][1], board[2][2]], [board[0][2], board[1][1], board[2][0]]]
@@ -87,26 +107,6 @@ class Game
   def update(board, move, current_player)
     board[move[0]] = board[move[0]].each_with_index.map { |val, index| index != move[1] ? val : current_player }
     board
-  end
-
-  def move
-    move = nil
-    available_moves = available_moves(board)
-    until available_moves.include?(move) == true
-      greet
-      move = gets.chomp.split(',').map(&:to_i)
-    end
-    move
-  end
-
-  def available_moves(board)
-    moves = []
-    board.each_with_index do |row, row_index|
-      row.each_with_index do |spot, spot_index|
-        moves << [row_index, spot_index] if spot == ' '
-      end
-    end
-    moves
   end
 
   def print_out
@@ -145,9 +145,7 @@ def users
   [player_one, player_two]
 end
 
-players = users
-player_one = players[0]
-player_two = players[1]
+player_one, player_two = users
 
 new_game = Game.new(player_one, player_two)
 new_game.play_game
