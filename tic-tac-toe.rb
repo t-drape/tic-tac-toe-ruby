@@ -48,7 +48,7 @@ class Game
   def initialize(player_1, player_2)
     @player_1 = player_1
     @player_2 = player_2
-    @board = Array.new(3, Array.new(3, "x"))
+    @board = Array.new(3, Array.new(3))
     @winner_exists = false
   end
 
@@ -68,10 +68,42 @@ class Game
     wins.any?(true)
   end
 
+  def update(board, move, current_player)
+
+  end
+
+  def greet()
+      puts "Use Format column, row "
+      puts "Please select an available move: "
+  end
+
+  def get_move
+    move = nil
+    available_moves = available_moves(self.board)
+    until available_moves.include?(move) == true
+      greet()
+      move = gets.chomp.split(",").map(&:to_i)
+    end
+  end
+
+  def available_moves(board)
+    moves = []
+    board.each_with_index do |row, row_index|
+      row.each_with_index do |spot, spot_index|
+         if spot == nil
+          moves << [row_index, spot_index]
+         end
+      end
+    end
+    return moves
+  end
+
+
+
   private
   attr_accessor :winner_exists
 end
 
-x = Game.new("x", "y")
+x = Game.new("you", "me")
 
-x.check_winner(x.board, "y")
+p x.update(x.board, [0,0], "x")
