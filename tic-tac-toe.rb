@@ -52,7 +52,7 @@ class Game
   end
 
   def show_board
-    p @board
+    puts self.board
   end
 
   def check_winner(board, current_player)
@@ -84,6 +84,7 @@ class Game
       greet()
       move = gets.chomp.split(",").map(&:to_i)
     end
+    move
   end
 
   def available_moves(board)
@@ -101,5 +102,6 @@ end
 
 x = Game.new("you", "me")
 
-x.update(x.board, [0,0], "x")
-p x.update(x.board, [1,1], "x")
+p x.update(x.board, x.get_move, "x")
+p x.update(x.board, x.get_move, "x")
+p x.update(x.board, x.get_move, "x")
