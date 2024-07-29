@@ -55,15 +55,26 @@ class Game
     @current_player = player_two
   end
 
-  def dv
-    diagonals = [[board[0][0], board[1][1], board[2][2]], [board[0][2], board[1][1], board[2][0]]]
-    verts = [[board[0][0], board[1][0], board[2][0]], [board[0][1], board[1][1], board[2][1]],
-             [board[0][2], board[1][2], board[2][2]]]
-    diagonals + verts
+  def salutation(player = nil)
+    print_out
+    if player
+      puts "#{current_player} is the winner!"
+    else
+      puts "Nobody won! It's a tie!"
+    end
+  end
+
+  def greet
+    puts 'Use Format column, row '
+    puts 'Please select an available move: '
   end
 
   def check_winner(board, current_player)
     wins = []
+    diagonals = [[board[0][0], board[1][1], board[2][2]], [board[0][2], board[1][1], board[2][0]]]
+    verts = [[board[0][0], board[1][0], board[2][0]], [board[0][1], board[1][1], board[2][1]],
+             [board[0][2], board[1][2], board[2][2]]]
+    dv = diagonals + verts
     board.each do |row|
       wins << row.all? { |element| element == current_player } ? true : false
     end
@@ -76,11 +87,6 @@ class Game
   def update(board, move, current_player)
     board[move[0]] = board[move[0]].each_with_index.map { |val, index| index != move[1] ? val : current_player }
     board
-  end
-
-  def greet
-    puts 'Use Format column, row '
-    puts 'Please select an available move: '
   end
 
   def move
@@ -115,16 +121,6 @@ class Game
                           else
                             @player_one
                           end
-  end
-
-  def salutation(player = nil)
-    print_out
-    if player
-      puts "#{current_player} is the winner!"
-    else
-      puts "Nobody won! It's a tie!"
-
-    end
   end
 
   def play_game
