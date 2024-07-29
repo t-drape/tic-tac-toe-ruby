@@ -1,47 +1,8 @@
 # frozen_string_literal: true
 
-# {[x | x | x],
-# [x | x | x],
-# [x | x | x] }
-
-# Create loop for game to run until either user has three boxes in a row
-# While no winner exists, play turn
-# Playing a turn consists of:
-# 1. User seeing old game board
-# 2. User selecting box for current move
-# 3. Box updating
-# 4. Checking for winner
-# 5. Displaying new box
-# 6. If winner, display message and end play
-# 7. Else, play turn until winner
-# Think of game board as 3x3, a hash of arrays
-# For each move, update value of hash
-# Switch current player
-# Get user input after prompt:
-# 1. “What is your move? “
-# 2. If input is invalid or
-# 3. Move has already been played
-# 4. Re prompt user with message
-# 5. “Spot already taken or invalid input.”
-
-# To check for winner:
-# See if either user has three values in a continuous line. Horizontal, Vertical, or Diagonal.
-
-# Variables?
-# Current player
-# Game Board hash
-# Move choice from user
-
-# Methods?
-# IsWinner?(board)
-# PlayTurn(old_board, current_user)
-
-# Classes?
-# Player, with value (X, O), name?
-
-# 100 lines per class
-# 5 lines per method
-# 4 params per mehtod
+require_relative 'gretting'
+require_relative 'play'
+require_relative 'winner'
 
 # Ruby model of a Tic Tac Toe game
 class Game
@@ -75,59 +36,6 @@ class Game
     move
   end
 
-  def check_diagonals(board, current_player, wins)
-    diagonals = [[board[0][0], board[1][1], board[2][2]], [board[0][2], board[1][1], board[2][0]]]
-    diagonals.each do |row|
-      wins << row.all? { |element| element == current_player } ? true : false
-    end
-  end
-
-  def check_verts_zero(board, current_player, wins)
-    row_zero = []
-    board.each do |row|
-      row.each_with_index do |val, v_index|
-        row_zero << val if v_index.zero?
-      end
-    end
-    wins << row_zero.all? { |element| element == current_player } ? true : false
-  end
-
-  def check_verts_one(board, current_player, wins)
-    row_one = []
-    board.each do |row|
-      row.each_with_index do |val, v_index|
-        row_one << val if v_index == 1
-      end
-    end
-    wins << row_one.all? { |element| element == current_player } ? true : false
-  end
-
-  def check_verts_two(board, current_player, wins)
-    row_two = []
-    board.each do |row|
-      row.each_with_index do |val, v_index|
-        row_two << val if v_index == 2
-      end
-    end
-    wins << row_two.all? { |element| element == current_player } ? true : false
-  end
-
-  def check_verts(board, current_player, wins)
-    check_verts_zero(board, current_player, wins)
-    check_verts_one(board, current_player, wins)
-    check_verts_two(board, current_player, wins)
-    wins
-  end
-
-  def check_winner(board, current_player)
-    wins = []
-    board.each do |row|
-      wins << row.all? { |element| element == current_player } ? true : false
-    end
-    check_verts(board, current_player, wins)
-    wins.any?(true)
-  end
-
   def update(board, move, current_player)
     board[move[0]] = board[move[0]].each_with_index.map { |val, index| index != move[1] ? val : current_player }
     board
@@ -153,38 +61,4 @@ class Game
     end
     salutation(@current_player)
   end
-
-  def salutation(player = nil)
-    print_out
-    if player
-      puts "#{current_player} is the winner!"
-    else
-      puts "Nobody won! It's a tie!"
-    end
-  end
-
-  def greet
-    puts 'Use Format column, row '
-    puts 'Please select an available move: '
-  end
-
-  def print_out
-    p board[0]
-    p board[1]
-    p board[2]
-  end
 end
-
-def users
-  puts 'Player 1: '
-  player_one = gets.chomp
-  puts 'Player 2: '
-  player_two = gets.chomp
-  [player_one, player_two]
-end
-
-player_one, player_two = users
-
-new_game = Game.new(player_one, player_two)
-
-new_game.play_game
