@@ -117,6 +117,13 @@ class Game
       end
       print_out()
       update(self.board, get_move(), self.current_player)
+      if available_moves(self.board).empty?
+        print_out()
+        puts "Nobody won! It's a tie!"
+        return
+      end
+
+
     end
     print_out
     puts "#{self.current_player} is the winner!"
