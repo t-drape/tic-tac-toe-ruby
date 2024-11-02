@@ -50,5 +50,6 @@ def check_winner(board, current_player)
     wins << row.all? { |element| element == current_player } ? true : false
   end
   check_verts(board, current_player, wins)
+  check_diagonals(board, current_player, wins)
   wins.any?(true)
 end
