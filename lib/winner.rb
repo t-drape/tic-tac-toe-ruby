@@ -5,6 +5,7 @@ def check_diagonals(board, current_player, wins)
   diagonals.each do |row|
     wins << row.all? { |element| element == current_player } ? true : false
   end
+  wins
 end
 
 def check_verts_zero(board, current_player, wins)
@@ -44,12 +45,9 @@ def check_verts(board, current_player, wins)
   wins
 end
 
-def check_winner(board, current_player)
-  wins = []
+def check_horizontals(board, current_player, wins)
   board.each do |row|
     wins << row.all? { |element| element == current_player } ? true : false
   end
-  check_verts(board, current_player, wins)
-  check_diagonals(board, current_player, wins)
-  wins.any?(true)
+  wins
 end

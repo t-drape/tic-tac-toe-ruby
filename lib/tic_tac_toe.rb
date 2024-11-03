@@ -76,4 +76,12 @@ class Game
     end
     players
   end
+
+  def check_winner(board, current_player)
+    wins = []
+    check_horizontals(board, current_player, wins)
+    check_verts(board, current_player, wins)
+    check_diagonals(board, current_player, wins)
+    wins.any?(true)
+  end
 end
