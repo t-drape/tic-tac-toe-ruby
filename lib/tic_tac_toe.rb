@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'gretting'
-require_relative 'play'
 require_relative 'winner'
 
 # Ruby model of a Tic Tac Toe game
@@ -67,5 +66,14 @@ class Game
     p board[0]
     p board[1]
     p board[2]
+  end
+
+  def users
+    players = []
+    2.times do |t|
+      puts "Player #{t + 1}: "
+      players << gets.chomp
+    end
+    players
   end
 end
