@@ -59,6 +59,13 @@ class Game
       salutation
       return
     end
+    print_out
     salutation(@current_player)
+  end
+
+  def print_out
+    p board[0]
+    p board[1]
+    p board[2]
   end
 end

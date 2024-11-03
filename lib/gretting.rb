@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 def salutation(player = nil)
-  print_out
   if player
-    puts "#{current_player} is the winner!"
+    puts "#{player} is the winner!"
   else
     puts "Nobody won! It's a tie!"
   end
