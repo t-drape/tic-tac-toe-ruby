@@ -2,7 +2,7 @@
 
 require_relative('../lib/winner')
 
-describe '#check_horizontals' do
+describe '#check_horizontals' do # rubocop:disable Metrics/BlockLength
   context 'when a player wins on a full row' do
     it 'returns true when first row is full' do
       board = [['x', 'x', 'x'],
@@ -75,15 +75,65 @@ describe '#check_verts' do # rubocop:disable Metrics/BlockLength
       expect(check_verts(board, 'x', [])).to eql([false, false, true])
     end
   end
+
+  context 'when method called' do
+    it 'adds to wins' do
+      board = [['', '1', ''],
+               ['', '1', ''],
+               ['', '1', '']]
+      wins = []
+      expect { check_verts(board, '1', wins) }.to change { wins }.to([false, true, false])
+    end
+  end
 end
 
-describe '#check_diagonals' do
-  context 'when board empty' do
-    it 'returns false' do
+describe '#check_diagonals' do # rubocop:disable Metrics/BlockLength
+  context 'when board is not in a winning position' do
+    it 'returns false if board is empty' do
       board = [['', '', ''],
                ['', '', ''],
                ['', '', '']]
       expect(check_diagonals(board, 'x', [])).to all(eql(false))
+    end
+
+    it 'returns false for player one if board is full' do
+      board = [%w[x y x],
+               %w[y x x],
+               %w[y x y]]
+      x = check_diagonals(board, 'x', [])
+      expect(x).to all(eql(false))
+    end
+    it 'returns false for player two if board is full' do
+      board = [%w[x y x],
+               %w[y x x],
+               %w[y x y]]
+      y = check_diagonals(board, 'y', [])
+      expect(y).to all(eql(false))
+    end
+  end
+
+  context 'when board is in a winning position' do
+    it 'returns true for diagonal starting from top left' do
+      board = [['x', '', ''],
+               ['', 'x', ''],
+               ['', '', 'x']]
+      expect(check_diagonals(board, 'x', [])).to include(true)
+    end
+
+    it 'returns true for diagonal starting from top right' do
+      board = [['', '', 'x'],
+               ['', 'x', ''],
+               ['x', '', '']]
+      expect(check_diagonals(board, 'x', [])).to include(true)
+    end
+  end
+
+  context 'when method called' do
+    it 'returns array' do
+      board = [['', '', 'x'],
+               ['', 'x', ''],
+               ['x', '', '']]
+      expect(check_diagonals(board, 'x', [])).to eql([false, true])
     end
   end
 end
