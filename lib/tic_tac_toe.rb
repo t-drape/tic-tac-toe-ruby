@@ -9,15 +9,15 @@ class Game
 
   def initialize(player_one, player_two)
     @player_one = player_one
-    @player_two = player_one
+    @player_two = player_two
     @board = Array.new(3, Array.new(3, ' '))
     @winner = nil
     @current_player = @player_two
   end
 
-  def available_moves(board)
+  def available_moves
     moves = []
-    board.each_with_index do |row, row_index|
+    @board.each_with_index do |row, row_index|
       row.each_with_index do |spot, spot_index|
         moves << [row_index, spot_index] if spot == ' '
       end
@@ -27,7 +27,7 @@ class Game
 
   def move
     move = nil
-    available_moves = available_moves(board)
+    available_moves = available_moves()
     until available_moves.include?(move) == true
       greet
       move = gets.chomp.split(',').map(&:to_i)
@@ -53,7 +53,7 @@ class Game
       print_out
       check_current_player
       update(board, move, @current_player)
-      next unless available_moves(board).empty? && check_winner(board, @current_player) != true
+      next unless available_moves.empty? && check_winner(board, @current_player) != true
 
       salutation
       return
