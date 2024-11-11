@@ -118,4 +118,18 @@ describe Game do
       end
     end
   end
+
+  describe "#update" do
+    context "when a move is made" do
+      subject(:board_update) {described_class.new("t", "j")}
+      it "returns a new board" do
+        expect(board_update.update(board_update.board, [0,0], @current_player)).to be_a Array
+      end
+
+      it "updates the board to reflect the move" do
+        expected_board = [["j", " ", " "], [" ", " ", " "], [" ", " ", " "]]
+        expect {board_update.update(board_update.board, [0,0], "j")}.to change {board_update.board}.to(expected_board)
+      end
+    end
+  end
 end

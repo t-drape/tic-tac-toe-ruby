@@ -37,6 +37,7 @@ class Game
 
   def update(board, move, current_player)
     board[move[0]] = board[move[0]].each_with_index.map { |val, index| index != move[1] ? val : current_player }
+    @board = board
     board
   end
 
