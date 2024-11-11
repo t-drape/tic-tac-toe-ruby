@@ -152,6 +152,185 @@ describe Game do
   end
 
   describe "#play_game" do
-    context ""
+    context "when the game loop is started" do
+      subject(:game_loop) { described_class.new("t", "j") }
+      before do
+        allow(game_loop).to receive(:print_out)
+        allow(game_loop).to receive(:salutation)
+        allow(game_loop).to receive(:update)
+        allow(game_loop).to receive(:move)
+      end
+      it "runs the loop only if no winner exists" do
+        allow(game_loop).to receive(:check_winner).and_return(true)
+        expect(game_loop).to receive(:check_winner).once.and_return(true)
+        game_loop.play_game
+      end
+
+      it "runs the loop until a winner exists" do
+        allow(game_loop).to receive(:check_winner).and_return(false, false, false, true)
+        expect(game_loop).to receive(:update).exactly(3).times
+        game_loop.play_game
+      end
+    end
+
+    context "when run, it calls all helper functions" do
+      subject(:game_functions) { described_class.new("t", "J") }
+      before do
+        allow(game_functions).to receive(:check_winner).and_return(false, true)
+        allow(game_functions).to receive(:print_out)
+        allow(game_functions).to receive(:check_current_player)
+        allow(game_functions).to receive(:update)
+        allow(game_functions).to receive(:move)
+        allow(game_functions).to receive(:salutation)
+        allow(game_functions).to receive(:available_moves).and_return([0,0])
+      end
+
+      it "calls print out inside loop, and once outside the loop" do
+        expect(game_functions).to receive(:print_out).twice
+        game_functions.play_game
+      end
+
+      it "calls salutation once at the end of the game" do
+        expect(game_functions).to receive(:salutation).once
+        game_functions.play_game
+      end
+
+      it "calls check_current_player once per loop" do
+        expect(game_functions).to receive(:check_current_player).once
+        game_functions.play_game
+      end
+
+      it "calls update once per loop" do
+        expect(game_functions).to receive(:update).once
+        game_functions.play_game
+      end
+
+      it "calls move once inside loop inside update" do
+        expect(game_functions).to receive(:move).once
+        game_functions.play_game
+      end
+
+      it "calls update with the correct values" do
+        allow(game_functions).to receive(:move).and_return([0,0])
+        current_player = game_functions.instance_variable_get(:@current_player)
+        expect(game_functions).to receive(:update).with(game_functions.board, [0,0],  current_player)
+        game_functions.play_game
+      end
+
+      it "calls salutation even if the game is tied" do
+        allow(game_functions).to receive(:available_moves).and_return([])
+        allow(game_functions).to receive(:check_winner).and_return(false)
+        expect(game_functions).to receive(:salutation).once
+        game_functions.play_game
+      end
+
+      it "calls available moves once" do
+        expect(game_functions).to receive(:available_moves).and_return([0,0])
+        game_functions.play_game
+      end
+
+      it "calls check_winner inside the loop as well" do
+        expect(game_functions).to receive(:check_winner).exactly(2).times
+        game_functions.play_game
+      end
+    end
+  end
+
+  describe "#salutation" do
+    context "when game over, uses correct phrase" do
+      subject(:game_over) { described_class.new("t", "j") }
+      it "prints name message if name provided" do
+        expect(game_over).to receive(:puts).once.with("James is the winner!")
+        game_over.salutation("James")
+      end
+      
+      it "prints outs tie message with no input" do
+        expect(game_over).to receive(:puts).once.with("Nobody won! It's a tie!")
+        game_over.salutation
+      end
+    end
+  end
+
+  describe "#print_out" do
+    context "shows the board between each round" do
+      subject(:show_round) { described_class.new("t", "j") }
+      it "shows each of the rows" do
+        # show_round.board = [["x", "x", "x"], ["x", "x", "x"], ["x", "x", "x"]]
+        allow(show_round).to receive(:p)
+        expect(show_round).to receive(:p).exactly(3).times
+        show_round.print_out
+      end
+
+      it "shows the rows correctly" do
+        show_round.board = [['x','x', 'x'], ['x', 'o', 'x'], ['o', 'x', 'x']]
+        expect {show_round.print_out}.to output(("#{show_round.board[0]}\n#{show_round.board[1]}\n#{show_round.board[2]}\n")).to_stdout
+      end
+    end
+  end
+
+  describe "#check_winner" do
+    context "when a round is played, called to see if a winner exists" do
+      subject(:winner) {described_class.new("t", "j")}
+      it "returns any number of wins" do
+        allow(winner).to receive(:check_horizontals).and_return([true, true])
+        expect(winner.check_winner(winner.board, winner.current_player)).to be(true)
+      end
+
+      it "calls check_horizontals once" do
+        allow(winner).to receive(:check_horizontals).and_return([false])
+        allow(winner).to receive(:check_verts).and_return([false])
+        allow(winner).to receive(:check_diagonals).and_return([false])
+        expect(winner).to receive(:check_horizontals).once
+        winner.check_winner(winner.board, winner.current_player)
+      end
+    end
+
+    context "it calls the other check functions each once" do
+      subject(:winner) {described_class.new("t", "j")}
+      before do
+        allow(winner).to receive(:check_horizontals).and_return([false])
+        allow(winner).to receive(:check_verts).and_return([false])
+        allow(winner).to receive(:check_diagonals).and_return([false])
+      end
+
+      it "calls check_horizontals once" do
+        expect(winner).to receive(:check_horizontals).once
+        winner.check_winner(winner.board, winner.current_player)
+      end
+
+      it "calls check_verts once" do
+        expect(winner).to receive(:check_verts).once
+        winner.check_winner(winner.board, winner.current_player)
+      end
+
+      it "calls check_diagonals once" do
+        expect(winner).to receive(:check_diagonals).once
+        winner.check_winner(winner.board, winner.current_player)
+      end
+    end
+
+    context "when called, it uses the same variables for each check" do
+      before do
+        allow(winner).to receive(:check_horizontals).and_return([false])
+        allow(winner).to receive(:check_verts).and_return([false])
+        allow(winner).to receive(:check_diagonals).and_return([false])
+      end
+      subject(:winner) {described_class.new("t", "j")}
+
+      it "uses the same variables for check_horizontals" do
+        expect(winner).to receive(:check_horizontals).once.with(winner.board, winner.current_player, [])
+        winner.check_winner(winner.board, winner.current_player)
+      end
+
+      it "uses the same variables for check_verts" do
+        expect(winner).to receive(:check_verts).once.with(winner.board, winner.current_player, [false])
+        winner.check_winner(winner.board, winner.current_player)
+      end
+
+      it "uses the same variables for check_diagonals" do
+        expect(winner).to receive(:check_diagonals).once.with(winner.board, winner.current_player, [false, false])
+        winner.check_winner(winner.board, winner.current_player)
+      end
+    end
   end
 end

@@ -50,11 +50,13 @@ class Game
   end
 
   def play_game
-    while check_winner(board, @current_player) != true
+    winner = check_winner(board, @current_player)
+    while winner != true
       print_out
       check_current_player
       update(board, move, @current_player)
-      next unless available_moves.empty? && check_winner(board, @current_player) != true
+      winner = check_winner(board, @current_player)
+      next unless available_moves.empty? && winner != true
 
       salutation
       return
@@ -98,9 +100,9 @@ class Game
 
   def check_winner(board, current_player)
     wins = []
-    check_horizontals(board, current_player, wins)
-    check_verts(board, current_player, wins)
-    check_diagonals(board, current_player, wins)
+    wins += check_horizontals(board, current_player, wins)
+    wins += check_verts(board, current_player, wins)
+    wins += check_diagonals(board, current_player, wins)
     wins.any?(true)
   end
 
