@@ -132,4 +132,26 @@ describe Game do
       end
     end
   end
+
+  describe "#check_current_player" do
+    context "it updates who the current player is" do
+      subject(:current_players) { described_class.new("t", "j") }
+      it "returns player one when current player is player two" do
+        p_one = current_players.instance_variable_get(:@player_one)
+        p_two = current_players.instance_variable_get(:@player_two)
+        expect { current_players.check_current_player }.to change {current_players.current_player}.from(p_two).to(p_one)
+      end
+
+      it "returns player two when the current player is player one" do
+        current_players.current_player = "t"
+        p_one = current_players.instance_variable_get(:@player_one)
+        p_two = current_players.instance_variable_get(:@player_two)
+        expect { current_players.check_current_player }.to change {current_players.current_player}.from(p_one).to(p_two)
+      end
+    end
+  end
+
+  describe "#play_game" do
+    context ""
+  end
 end

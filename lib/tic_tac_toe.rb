@@ -82,19 +82,19 @@ class Game
     p board[2]
   end
 
-  def player(num)
-    puts "Player #{num}: "
-    gets.chomp
-  end
+  # def player(num)
+  #   puts "Player #{num}: "
+  #   gets.chomp
+  # end
 
-  def users
-    players = []
-    2.times do |t|
-      puts "Player #{t + 1}: "
-      players << gets.chomp
-    end
-    players
-  end
+  # def users
+  #   players = []
+  #   2.times do |t|
+  #     puts "Player #{t + 1}: "
+  #     players << gets.chomp
+  #   end
+  #   players
+  # end
 
   def check_winner(board, current_player)
     wins = []
