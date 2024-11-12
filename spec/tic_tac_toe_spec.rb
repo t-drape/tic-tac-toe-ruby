@@ -359,6 +359,7 @@ describe Game do
                 ['', '', 'x']]
         expect(diagonals.check_diagonals(board, 'x', [])).to include(true)
       end
+    end
 
     context "when board is full" do
       subject(:diagonals) { described_class.new("x", "o") }
@@ -367,19 +368,37 @@ describe Game do
         current_player = "x"
         expect(diagonals.check_diagonals(board, current_player, [])).to eql([false, false])
       end
-      
+
       it "returns true filled array when both diagonals are filled" do
         board = [["x", "o", "x"], ["o", "x", "o"], ["x", "o", "x"]]
         current_player = "x"
         expect(diagonals.check_diagonals(board, "x", [])).to all eql(true)
       end
     end
+  end
 
-      # it "returns true filled array when both diagonals are filled" do
-      #   board = [["x", "o", "x"], ["o", "x", "o"], ["x", "o", "x"]]
-      #   current_player = "x"
-      #   expect(diagonals.check_diagonals(board, "x", [])).to all eql(true)
-      # end
+  describe "#check_vertical" do
+    context "when a board is vertically cehecked, returns the columns filled with players" do
+      subject(:columns) { described_class.new("x", "o") }
+      it "cycles through each row of board" do
+        board = [%w[x o x],
+                %w[x o x],
+                %w[x o x]]
+        expect(board).to receive(:each).exactly(3).times
+        columns.check_vertical(board)
+      end
+
+      it "returns an array" do
+        expect(columns.check_vertical(columns.board)).to be_kind_of(Array)
+      end
+
+      it "returns the correct value" do
+        expected_output = [["x", "x", "x"], ["o", "x", "o"], ["x", "x", "o"]]
+        board = [%w[x o x],
+                %w[x x x],
+                %w[x o o]]
+        expect(columns.check_vertical(board)).to eql(expected_output)
+      end
     end
   end
 end
