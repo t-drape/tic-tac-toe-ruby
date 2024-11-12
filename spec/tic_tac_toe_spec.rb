@@ -432,4 +432,30 @@ describe Game do
       end
     end
   end
+
+  describe "#check_horizontals" do
+    context "when the wins are a full row across" do
+      subject(:horizontals) { described_class.new("x", "o") }
+
+      it "returns an array" do
+        expect(horizontals.check_horizontals(horizontals.board, horizontals.current_player, [])).to be_kind_of(Array)
+      end
+
+      it "returns an array full of false when no values present" do
+        expect(horizontals.check_horizontals(horizontals.board, horizontals.current_player, [])).to all eql(false)
+      end
+
+      it "calls each on the given input board" do
+        expect(horizontals.board).to receive(:each).once
+        horizontals.check_horizontals(horizontals.board, horizontals.current_player, [])
+      end
+
+      it "correctly identifies a full row and counts it as a win" do
+        board = [%w[o o o ], %w[o x o], %w[o o o]]
+        current_player = "o"
+        expected_output = [true, false, true]
+        expect(horizontals.check_horizontals(board, current_player, [])).to eql(expected_output)
+      end
+    end
+  end
 end
