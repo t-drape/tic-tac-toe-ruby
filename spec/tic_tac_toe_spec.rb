@@ -333,4 +333,53 @@ describe Game do
       end
     end
   end
+
+  describe "#check_diagonals" do
+    context "when board is not full" do
+      subject(:diagonals) { described_class.new("x", "o") }
+
+      it "returns an array" do
+        expect(diagonals.check_diagonals(diagonals.board, diagonals.current_player, [])).to be_kind_of(Array)
+      end
+
+      it "returns false filled array when no diagonal wins on board" do
+         expect(diagonals.check_diagonals(diagonals.board, diagonals.current_player, [])).to all eql(false)
+      end
+
+      it "returns array with true when diagonal from top right is on board" do
+        board = [['', '', 'x'],
+                ['', 'x', ''],
+                ['x', '', '']]
+        expect(diagonals.check_diagonals(board, 'x', [])).to include(true)
+      end
+
+      it "returns array with true when diagonal from topl left is on the board" do
+        board = [['x', '', ''],
+                ['', 'x', ''],
+                ['', '', 'x']]
+        expect(diagonals.check_diagonals(board, 'x', [])).to include(true)
+      end
+
+    context "when board is full" do
+      subject(:diagonals) { described_class.new("x", "o") }
+      it "returns false when no diagonal found" do
+        board = [["x", "x", "x"], ["x", "o", "o"], ["x", "o", "x"]]
+        current_player = "x"
+        expect(diagonals.check_diagonals(board, current_player, [])).to eql([false, false])
+      end
+      
+      it "returns true filled array when both diagonals are filled" do
+        board = [["x", "o", "x"], ["o", "x", "o"], ["x", "o", "x"]]
+        current_player = "x"
+        expect(diagonals.check_diagonals(board, "x", [])).to all eql(true)
+      end
+    end
+
+      # it "returns true filled array when both diagonals are filled" do
+      #   board = [["x", "o", "x"], ["o", "x", "o"], ["x", "o", "x"]]
+      #   current_player = "x"
+      #   expect(diagonals.check_diagonals(board, "x", [])).to all eql(true)
+      # end
+    end
+  end
 end
