@@ -401,4 +401,35 @@ describe Game do
       end
     end
   end
+
+  describe "#check_verts" do
+    context "when a board is checked, it checks the columns for any wins" do
+      subject(:verticals) { described_class.new("x", "o") }
+
+      before do
+        allow(verticals).to receive(:check_vertical).and_return([["x", "x", "x"], ["o", "x", "o"], ["x", "x", "o"]])        
+      end
+
+      it "calls check_vertical for columns" do
+        expect(verticals).to receive(:check_vertical).once
+        verticals.check_verts(verticals.board, verticals.current_player, [])
+      end
+
+      it "returns an array" do
+        expect(verticals.check_verts(verticals.board, verticals.current_player, [])).to be_kind_of(Array)
+      end
+
+      it "returns a win as true" do
+        current_player = "x"
+        expect(verticals.check_verts(verticals.board, current_player, [])).to eql([true, false, false])
+      end
+
+      it "returns all false when no column is full of one player" do
+        current_player = "x"
+        columns = [%w[o x o], %w[x o x], %w[o x o]]
+        allow(verticals).to receive(:check_vertical).and_return(columns)
+        expect(verticals.check_verts(verticals.board, current_player, [])).to all be(false)
+      end
+    end
+  end
 end
